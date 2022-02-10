@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 16:15:14 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/02/10 16:59:07 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/02/10 21:33:00 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int	init_mdata(t_mdata *mdata, int argc, char **argv) // TODO: init write_mutex
 	mdata->t_eat = ft_atoi(argv[3]);
 	mdata->t_sleep = ft_atoi(argv[4]);
 	mdata->eat_count = -1;
+	mdata->must_die = 0;
 	if (argc == 6)
 		mdata->eat_count = ft_atoi(argv[5]);
 	mdata->threads = (pthread_t *)malloc(sizeof(pthread_t) * mdata->num);
@@ -66,7 +67,12 @@ int	init_pdata(t_mdata *mdata)
 		mdata->pdata[i]->left
 			= mdata->forks[(i + mdata->num - 1) % mdata->num];
 		mdata->pdata[i]->right = mdata->forks[i];
-		mdata->pdata[i]->must_die = 0;
+		mdata->pdata[i]->must_die = &(mdata->must_die);
+		mdata->pdata[i]->t_die = mdata->t_die;
+		mdata->pdata[i]->t_eat = mdata->t_eat;
+		mdata->pdata[i]->t_sleep = mdata->t_sleep;
+		mdata->pdata[i]->eat_count = mdata->eat_count;
+		mdata->pdata[i]->write_mutex = &(mdata->write_mutex);
 	}
 	return (0);
 }
@@ -87,14 +93,11 @@ int	init_threads(t_mdata *mdata)
 			printf("поток не открылся, надо закрыть все предыдущие хз\n"); // TODO: remove
 			pthread_mutex_lock(&(mdata->write_mutex));
 			i = -1;
+			mdata->must_die = 1;
 			while (++i && mdata->threads[i])
-			{
-				mdata->pdata[i]->must_die = 1;
 				pthread_detach(mdata->threads[i]);
-			}
 			return (1);
 		}
-		printf("thread %i created\n", i);
 	}
 	return (0);
 }

@@ -4,7 +4,8 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <unistd.h>
-# include <time.h>
+// # include <time.h>
+# include <sys/time.h>
 # include <pthread.h>
 
 // memset, printf, malloc, free, write,
@@ -22,18 +23,24 @@ typedef struct s_fork
 
 typedef struct s_pdata
 {
-	int		num;
-	t_fork	*left;
-	t_fork	*right;
-	int		must_die;
+	int				num;
+	t_fork			*left;
+	t_fork			*right;
+	int				*must_die;
+	int				t_die;
+	int				t_eat;
+	int				t_sleep;
+	int				eat_count;
+	pthread_mutex_t	*write_mutex;
 }			t_pdata;
 
 typedef struct s_mdata
 {
+	int				num;
 	pthread_t		*threads;
 	t_pdata			**pdata;
 	t_fork			**forks;
-	int				num;
+	int				must_die;
 	int				t_die;
 	int				t_eat;
 	int				t_sleep;
@@ -52,5 +59,8 @@ int		init_threads(t_mdata *mdata);
 
 // utils_ft.c
 int		ft_atoi(const char *str);
+void	ft_putnbr_u(unsigned int n);
+
+// utils_philo.c
 
 #endif

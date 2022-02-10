@@ -42,9 +42,10 @@ int	main(int argc, char **argv)
 	init_forks(mdata);
 	init_pdata(mdata);
 	init_threads(mdata);
-	// mdata = (t_mdata *)malloc(sizeof(t_mdata)); // TODO: save malloc
-	// if (mdata)
-	// if (init_mdata(mdata, argc, argv))
-	// 	return (free_data(mdata, 1));
-	// free_data(mdata, 0);
+
+	int	i;
+
+	i = -1;
+	while (++i < mdata->num)
+		pthread_join(mdata->threads[i], 0);
 }

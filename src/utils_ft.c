@@ -1,4 +1,18 @@
+#include <unistd.h>
 
+void	ft_putnbr_u(unsigned int n)
+{
+	char	c;
+
+	c = '0' + (n % 10);
+	if (n < 10)
+		write(1, &c, 1);
+	else
+	{
+		ft_putnbr_u(n / 10);
+		write(1, &c, 1);
+	}
+}
 
 int	ft_atoi(const char *str)
 {
