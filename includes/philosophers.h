@@ -8,10 +8,11 @@
 # include <pthread.h>
 
 // memset, printf, malloc, free, write,
-// usleep, gettimeofday, pthread_create,
-// pthread_detach, pthread_join, pthread_mutex_init,
-// pthread_mutex_destroy, pthread_mutex_lock,
-// pthread_mutex_unlock
+// usleep, gettimeofday
+//
+// pthread_create, pthread_detach, pthread_join
+// pthread_mutex_init, pthread_mutex_destroy
+// pthread_mutex_lock, pthread_mutex_unlock
 
 typedef struct s_fork
 {
@@ -29,12 +30,27 @@ typedef struct s_pdata
 
 typedef struct s_mdata
 {
-	pthread_t	*threads; // array with thread's id
-	int			count; // number of forks / number of philosophers
-	int			t_die; // time to die
-	int			t_eat; // time to eat
-	int			t_sleep; // time to sleep
-	int			eat_count; // сколько раз философы должны покушать
+	pthread_t		*threads;
+	t_pdata			**pdata;
+	t_fork			**forks;
+	int				num;
+	int				t_die;
+	int				t_eat;
+	int				t_sleep;
+	int				eat_count;
+	pthread_mutex_t	write_mutex;
 }				t_mdata;
+
+// philosopher.c
+void	*philosopher(void *thread_data);
+
+// initialize.c
+int		init_mdata(t_mdata *mdata, int argc, char **argv);
+int		init_forks(t_mdata *mdata);
+int		init_pdata(t_mdata *mdata);
+int		init_threads(t_mdata *mdata);
+
+// utils_ft.c
+int		ft_atoi(const char *str);
 
 #endif

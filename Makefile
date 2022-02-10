@@ -9,7 +9,7 @@ SRCDIR		= ./src/
 OBJDIR		= ./obj/
 INCDIR		= ./includes/
 
-SRC			= philosophers.c
+SRC			= main.c initialize.c utils_ft.c philosopher.c
 OBJ			= $(addprefix $(OBJDIR), $(SRC:.c=.o))
 
 all: $(NAME)
