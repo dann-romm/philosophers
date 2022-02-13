@@ -1,8 +1,8 @@
 #include "philosophers.h"
 
-int	free_data(t_mdata *mdata, int exit_code)
+int32_t	free_data(t_mdata *mdata, int32_t exit_code)
 {
-	int	i;
+	int32_t	i;
 
 	if (mdata)
 	{
@@ -31,7 +31,7 @@ int	free_data(t_mdata *mdata, int exit_code)
 	return (exit_code);
 }
 
-int	main(int argc, char **argv)
+int32_t	main(int32_t argc, char **argv)
 {
 	t_mdata	*mdata;
 
@@ -40,10 +40,15 @@ int	main(int argc, char **argv)
 		return (1);
 	init_mdata(mdata, argc, argv);
 	init_forks(mdata);
-	init_pdata(mdata);
+	if (argc < 6)
+		init_pdata(mdata, argv, -1);
+	else
+		init_pdata(mdata, argv, ft_atoi(argv[5]));
+
 	init_threads(mdata);
 
-	int	i;
+
+	int32_t	i;
 
 	i = -1;
 	while (++i < mdata->num)

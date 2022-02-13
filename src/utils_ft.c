@@ -1,24 +1,25 @@
 #include <unistd.h>
 
-void	ft_putnbr_u(unsigned int n)
+void	ft_putnbr(int64_t n)
 {
 	char	c;
 
 	c = '0' + (n % 10);
-	if (n < 10)
-		write(1, &c, 1);
-	else
+	if (n < 0)
 	{
-		ft_putnbr_u(n / 10);
-		write(1, &c, 1);
+		write(1, "-", 1);
+		return (ft_putnbr(-n));
 	}
+	if (n > 9)
+		ft_putnbr(n / 10);
+	write(1, &c, 1);
 }
 
-int	ft_atoi(const char *str)
+int32_t	ft_atoi(const char *str)
 {
-	int	i;
-	int	sign;
-	int	ans;
+	int32_t	i;
+	int32_t	sign;
+	int32_t	ans;
 
 	i = 0;
 	ans = 0;

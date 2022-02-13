@@ -1,24 +1,30 @@
 #include "philosophers.h"
 
+
 void	p_sleep(t_pdata *pdata)
 {
 	pthread_mutex_lock(pdata->write_mutex);
-	ft_putnbr_u(pdata->num + 1);
-	write(1, " is sleeping\n", 13);
+	ft_putnbr(pdata->num + 1);
+	write(1, SLEEPING_MSG, SLEEPING_MSG_LEN);
 	pthread_mutex_unlock(pdata->write_mutex);
-	usleep(pdata->t_sleep * 1000);
+	usleep(pdata->sleep_ms * 1000);
 	pthread_mutex_lock(pdata->write_mutex);
-	ft_putnbr_u(pdata->num + 1);
-	write(1, " is thinking\n", 13);
+	ft_putnbr(pdata->num + 1);
+	write(1, THINKING_MSG, THINKING_MSG_LEN);
 	pthread_mutex_unlock(pdata->write_mutex);
 }
 
-void	fork_msg(int num, pthread_mutex_t *mutex)
+void	fork_msg(int32_t num, pthread_mutex_t *mutex)
 {
 	pthread_mutex_lock(mutex);
-	ft_putnbr_u(num + 1);
-	write(1, " has taken a fork\n", 18);
+	ft_putnbr(num + 1);
+	write(1, TAKING_FORK_MSG, TAKING_FORK_MSG_LEN);
 	pthread_mutex_unlock(mutex);
+}
+
+void	sleep_ms(int64_t ms)
+{
+
 }
 
 void	p_eat(t_pdata *pdata)
@@ -37,12 +43,12 @@ void	p_eat(t_pdata *pdata)
 	fork_msg(pdata->num, pdata->write_mutex);
 	pthread_mutex_lock(&(max_fork->mutex));
 	fork_msg(pdata->num, pdata->write_mutex);
-	
+
 	pthread_mutex_lock(pdata->write_mutex);
-	ft_putnbr_u(pdata->num + 1);
-	write(1, " is eating\n", 11);
+	ft_putnbr(pdata->num + 1);
+	write(1, EATING_MSG, EATING_MSG_LEN);
 	pthread_mutex_unlock(pdata->write_mutex);
-	usleep(pdata->t_eat * 1000);
+	usleep(pdata->eat_ms * 1000);
 
 	pthread_mutex_unlock(&(max_fork->mutex));
 	pthread_mutex_unlock(&(min_fork->mutex));
@@ -53,7 +59,9 @@ void	*philosopher(void *thread_data)
 	t_pdata	*pdata;
 
 	pdata = (t_pdata *)thread_data;
-	while (1)
+	if (pdata->num % 2)
+		usleep(pdata->sleep_ms / 2);
+	while (*(pdata->must_die) == 0)
 	{
 		p_eat(pdata);
 		p_sleep(pdata);

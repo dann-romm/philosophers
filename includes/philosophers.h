@@ -1,10 +1,19 @@
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
 
+# define EATING_MSG " is eating\n"
+# define EATING_MSG_LEN 11
+# define SLEEPING_MSG " is sleeping\n"
+# define SLEEPING_MSG_LEN 13
+# define THINKING_MSG " is thinking\n"
+# define THINKING_MSG_LEN 13
+# define TAKING_FORK_MSG " has taken a fork\n"
+# define TAKING_FORK_MSG_LEN 18
+
+
 # include <stdlib.h>
 # include <stdio.h>
 # include <unistd.h>
-// # include <time.h>
 # include <sys/time.h>
 # include <pthread.h>
 
@@ -18,49 +27,54 @@
 typedef struct s_fork
 {
 	pthread_mutex_t	mutex;
-	int				num;
+	int32_t			num;
 }					t_fork;
 
 typedef struct s_pdata
 {
-	int				num;
+	int32_t			num;
 	t_fork			*left;
 	t_fork			*right;
-	int				*must_die;
-	int				t_die;
-	int				t_eat;
-	int				t_sleep;
-	int				eat_count;
+	int32_t			*must_die;
+
+	int64_t			die_ms;
+	int64_t			eat_ms;
+	int64_t			sleep_ms;
+	int64_t			eat_count;
+
+	int64_t			start_time;
+	int64_t			last_eat;
+
 	pthread_mutex_t	*write_mutex;
 }			t_pdata;
 
 typedef struct s_mdata
 {
-	int				num;
+	int32_t			num;
 	pthread_t		*threads;
 	t_pdata			**pdata;
 	t_fork			**forks;
-	int				must_die;
-	int				t_die;
-	int				t_eat;
-	int				t_sleep;
-	int				eat_count;
+	int32_t			must_die;
 	pthread_mutex_t	write_mutex;
 }				t_mdata;
 
 // philosopher.c
-void	*philosopher(void *thread_data);
+void		*philosopher(void *thread_data);
 
 // initialize.c
-int		init_mdata(t_mdata *mdata, int argc, char **argv);
-int		init_forks(t_mdata *mdata);
-int		init_pdata(t_mdata *mdata);
-int		init_threads(t_mdata *mdata);
+int32_t		init_mdata(t_mdata *mdata, int32_t argc, char **argv);
+int32_t		init_forks(t_mdata *mdata);
+int32_t		init_pdata(t_mdata *mdata, char **argv, int64_t	eat_count);
+int32_t		init_threads(t_mdata *mdata);
 
 // utils_ft.c
-int		ft_atoi(const char *str);
-void	ft_putnbr_u(unsigned int n);
+int32_t		ft_atoi(const char *str);
+void		ft_putnbr(int64_t n);
 
 // utils_philo.c
+
+// time.c
+int64_t		get_time_ms(void);
+int64_t		timestamp(int64_t start_time);
 
 #endif
