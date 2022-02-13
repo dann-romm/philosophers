@@ -77,5 +77,6 @@ void		ft_putnbr(int64_t n);
 // time.c
 int64_t		get_time_ms(void);
 int64_t		timestamp(int64_t start_time);
+void		sleep_ms(int64_t ms);
 
 #endif

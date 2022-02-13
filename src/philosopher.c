@@ -9,7 +9,7 @@ void	p_sleep(t_pdata *pdata)
 	ft_putnbr(pdata->num + 1);
 	write(1, SLEEPING_MSG, SLEEPING_MSG_LEN);
 	pthread_mutex_unlock(pdata->write_mutex);
-	usleep(pdata->sleep_ms);
+	sleep_ms(pdata->sleep_ms);
 	pthread_mutex_lock(pdata->write_mutex);
 	ft_putnbr(timestamp(pdata->start_time));
 	write(1, " ", 1);
@@ -26,11 +26,6 @@ void	fork_msg(t_pdata *pdata)
 	ft_putnbr(pdata->num + 1);
 	write(1, TAKING_FORK_MSG, TAKING_FORK_MSG_LEN);
 	pthread_mutex_unlock(pdata->write_mutex);
-}
-
-void	sleep_ms(int64_t ms)
-{
-
 }
 
 void	p_eat(t_pdata *pdata)
@@ -56,8 +51,7 @@ void	p_eat(t_pdata *pdata)
 	ft_putnbr(pdata->num + 1);
 	write(1, EATING_MSG, EATING_MSG_LEN);
 	pthread_mutex_unlock(pdata->write_mutex);
-	usleep(pdata->eat_ms);
-
+	sleep_ms(pdata->eat_ms);
 	pthread_mutex_unlock(&(max_fork->mutex));
 	pthread_mutex_unlock(&(min_fork->mutex));
 }
@@ -68,7 +62,7 @@ void	*philosopher(void *thread_data)
 
 	pdata = (t_pdata *)thread_data;
 	if (pdata->num % 2)
-		usleep(pdata->sleep_ms / 2);
+		sleep_ms(pdata->sleep_ms / 2);
 	while (*(pdata->must_die) == 0)
 	{
 		p_eat(pdata);

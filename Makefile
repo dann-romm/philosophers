@@ -34,4 +34,7 @@ re: fclean all
 
 bonus: $(NAME)
 
+test: $(NAME)
+	./$(NAME) 5 800 200 200
+
 .PHONY: all clean fclean re bonus

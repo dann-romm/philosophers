@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 16:15:14 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/02/13 13:57:50 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/02/14 01:46:34 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,9 @@ int32_t	init_pdata(t_mdata *mdata, char **argv, int64_t	eat_count)
 			= mdata->forks[(i + mdata->num - 1) % mdata->num];
 		mdata->pdata[i]->right = mdata->forks[i];
 		mdata->pdata[i]->must_die = &(mdata->must_die);
-		mdata->pdata[i]->die_ms = (int64_t)ft_atoi(argv[2]) * 1000;
-		mdata->pdata[i]->eat_ms = (int64_t)ft_atoi(argv[3]) * 1000;
-		mdata->pdata[i]->sleep_ms = (int64_t)ft_atoi(argv[4]) * 1000;
+		mdata->pdata[i]->die_ms = (int64_t)ft_atoi(argv[2]);
+		mdata->pdata[i]->eat_ms = (int64_t)ft_atoi(argv[3]);
+		mdata->pdata[i]->sleep_ms = (int64_t)ft_atoi(argv[4]);
 		mdata->pdata[i]->eat_count = eat_count;
 		mdata->pdata[i]->write_mutex = &(mdata->write_mutex);
 	}
