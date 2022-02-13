@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <stdint.h>
 
 void	ft_putnbr(int64_t n)
 {

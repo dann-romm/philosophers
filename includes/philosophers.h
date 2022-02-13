@@ -16,6 +16,7 @@
 # include <unistd.h>
 # include <sys/time.h>
 # include <pthread.h>
+# include <stdint.h>
 
 // memset, printf, malloc, free, write,
 // usleep, gettimeofday
