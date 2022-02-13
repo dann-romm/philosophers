@@ -4,22 +4,28 @@
 void	p_sleep(t_pdata *pdata)
 {
 	pthread_mutex_lock(pdata->write_mutex);
+	ft_putnbr(timestamp(pdata->start_time));
+	write(1, " ", 1);
 	ft_putnbr(pdata->num + 1);
 	write(1, SLEEPING_MSG, SLEEPING_MSG_LEN);
 	pthread_mutex_unlock(pdata->write_mutex);
-	usleep(pdata->sleep_ms * 1000);
+	usleep(pdata->sleep_ms);
 	pthread_mutex_lock(pdata->write_mutex);
+	ft_putnbr(timestamp(pdata->start_time));
+	write(1, " ", 1);
 	ft_putnbr(pdata->num + 1);
 	write(1, THINKING_MSG, THINKING_MSG_LEN);
 	pthread_mutex_unlock(pdata->write_mutex);
 }
 
-void	fork_msg(int32_t num, pthread_mutex_t *mutex)
+void	fork_msg(t_pdata *pdata)
 {
-	pthread_mutex_lock(mutex);
-	ft_putnbr(num + 1);
+	pthread_mutex_lock(pdata->write_mutex);
+	ft_putnbr(timestamp(pdata->start_time));
+	write(1, " ", 1);
+	ft_putnbr(pdata->num + 1);
 	write(1, TAKING_FORK_MSG, TAKING_FORK_MSG_LEN);
-	pthread_mutex_unlock(mutex);
+	pthread_mutex_unlock(pdata->write_mutex);
 }
 
 void	sleep_ms(int64_t ms)
@@ -40,15 +46,17 @@ void	p_eat(t_pdata *pdata)
 		max_fork = pdata->left;
 	}
 	pthread_mutex_lock(&(min_fork->mutex));
-	fork_msg(pdata->num, pdata->write_mutex);
+	fork_msg(pdata);
 	pthread_mutex_lock(&(max_fork->mutex));
-	fork_msg(pdata->num, pdata->write_mutex);
+	fork_msg(pdata);
 
 	pthread_mutex_lock(pdata->write_mutex);
+	ft_putnbr(timestamp(pdata->start_time));
+	write(1, " ", 1);
 	ft_putnbr(pdata->num + 1);
 	write(1, EATING_MSG, EATING_MSG_LEN);
 	pthread_mutex_unlock(pdata->write_mutex);
-	usleep(pdata->eat_ms * 1000);
+	usleep(pdata->eat_ms);
 
 	pthread_mutex_unlock(&(max_fork->mutex));
 	pthread_mutex_unlock(&(min_fork->mutex));
