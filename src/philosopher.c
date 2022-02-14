@@ -1,59 +1,67 @@
-#include "philosophers.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philosopher.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/14 17:43:24 by doalbaco          #+#    #+#             */
+/*   Updated: 2022/02/14 17:43:25 by doalbaco         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "philosophers.h"
 
 void	p_sleep(t_pdata *pdata)
 {
-	pthread_mutex_lock(pdata->write_mutex);
-	ft_putnbr(timestamp(pdata->start_time));
-	write(1, " ", 1);
-	ft_putnbr(pdata->num + 1);
-	write(1, SLEEPING_MSG, SLEEPING_MSG_LEN);
-	pthread_mutex_unlock(pdata->write_mutex);
-	sleep_ms(pdata->sleep_ms);
-	pthread_mutex_lock(pdata->write_mutex);
-	ft_putnbr(timestamp(pdata->start_time));
-	write(1, " ", 1);
-	ft_putnbr(pdata->num + 1);
-	write(1, THINKING_MSG, THINKING_MSG_LEN);
-	pthread_mutex_unlock(pdata->write_mutex);
+	if (!(*(pdata->must_die)))
+	{
+		print_message(pdata, SLEEPING_MSG);
+		sleep_ms(pdata, pdata->sleep_ms);
+		if (check_died_time(pdata))
+			return ;
+		print_message(pdata, THINKING_MSG);
+	}
 }
 
-void	fork_msg(t_pdata *pdata)
+void	take_forks(t_pdata *pdata)
 {
-	pthread_mutex_lock(pdata->write_mutex);
-	ft_putnbr(timestamp(pdata->start_time));
-	write(1, " ", 1);
-	ft_putnbr(pdata->num + 1);
-	write(1, TAKING_FORK_MSG, TAKING_FORK_MSG_LEN);
-	pthread_mutex_unlock(pdata->write_mutex);
+	if (pdata->left->num < pdata->right->num)
+	{
+		pthread_mutex_lock(&(pdata->left->mutex));
+		print_message(pdata, TAKING_FORK_MSG);
+		if (check_died_time(pdata))
+			return ;
+	}
+	pthread_mutex_lock(&(pdata->right->mutex));
+	if (check_died_time(pdata))
+		return ;
+	print_message(pdata, TAKING_FORK_MSG);
+	if (pdata->left->num > pdata->right->num)
+	{
+		pthread_mutex_lock(&(pdata->left->mutex));
+		if (check_died_time(pdata))
+			return ;
+		print_message(pdata, TAKING_FORK_MSG);
+	}
+}
+
+void	put_forks(t_pdata *pdata)
+{
+	if (pdata->left->num > pdata->right->num)
+		pthread_mutex_unlock(&(pdata->left->mutex));
+	pthread_mutex_unlock(&(pdata->right->mutex));
+	if (pdata->left->num < pdata->right->num)
+		pthread_mutex_unlock(&(pdata->left->mutex));
 }
 
 void	p_eat(t_pdata *pdata)
 {
-	t_fork	*min_fork;
-	t_fork	*max_fork;
-
-	min_fork = pdata->left;
-	max_fork = pdata->right;
-	if (pdata->left->num > pdata->right->num)
-	{
-		min_fork = pdata->right;
-		max_fork = pdata->left;
-	}
-	pthread_mutex_lock(&(min_fork->mutex));
-	fork_msg(pdata);
-	pthread_mutex_lock(&(max_fork->mutex));
-	fork_msg(pdata);
-
-	pthread_mutex_lock(pdata->write_mutex);
-	ft_putnbr(timestamp(pdata->start_time));
-	write(1, " ", 1);
-	ft_putnbr(pdata->num + 1);
-	write(1, EATING_MSG, EATING_MSG_LEN);
-	pthread_mutex_unlock(pdata->write_mutex);
-	sleep_ms(pdata->eat_ms);
-	pthread_mutex_unlock(&(max_fork->mutex));
-	pthread_mutex_unlock(&(min_fork->mutex));
+	take_forks(pdata);
+	print_message(pdata, EATING_MSG);
+	pdata->last_eat = get_time_ms();
+	sleep_ms(pdata, pdata->eat_ms);
+	put_forks(pdata);
 }
 
 void	*philosopher(void *thread_data)
@@ -62,7 +70,7 @@ void	*philosopher(void *thread_data)
 
 	pdata = (t_pdata *)thread_data;
 	if (pdata->num % 2)
-		sleep_ms(pdata->sleep_ms / 2);
+		sleep_ms(pdata, pdata->sleep_ms / 2);
 	while (*(pdata->must_die) == 0)
 	{
 		p_eat(pdata);

@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 16:15:14 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/02/14 01:46:34 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/02/14 17:43:12 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int32_t	init_pdata(t_mdata *mdata, char **argv, int64_t	eat_count)
 	return (0);
 }
 
-int32_t	init_threads(t_mdata *mdata) // прикрутить время
+int32_t	init_threads(t_mdata *mdata)
 {
 	int32_t	i;
 	int64_t	start_time;
@@ -91,7 +91,6 @@ int32_t	init_threads(t_mdata *mdata) // прикрутить время
 				philosopher, mdata->pdata[i]))
 		{
 			pthread_mutex_lock(&(mdata->write_mutex));
-			printf("поток не открылся, надо закрыть все предыдущие хз\n"); // TODO: remove
 			mdata->must_die = 1;
 			i = 0;
 			while (i && mdata->threads[i])

@@ -1,15 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philosophers.h                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/14 17:40:30 by doalbaco          #+#    #+#             */
+/*   Updated: 2022/02/14 17:42:08 by doalbaco         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
 
-# define EATING_MSG " is eating\n"
-# define EATING_MSG_LEN 11
-# define SLEEPING_MSG " is sleeping\n"
-# define SLEEPING_MSG_LEN 13
-# define THINKING_MSG " is thinking\n"
-# define THINKING_MSG_LEN 13
-# define TAKING_FORK_MSG " has taken a fork\n"
-# define TAKING_FORK_MSG_LEN 18
-
+# define EATING_MSG "is eating"
+# define SLEEPING_MSG "is sleeping"
+# define THINKING_MSG "is thinking"
+# define TAKING_FORK_MSG "has taken a fork"
 
 # include <stdlib.h>
 # include <stdio.h>
@@ -17,13 +24,6 @@
 # include <sys/time.h>
 # include <pthread.h>
 # include <stdint.h>
-
-// memset, printf, malloc, free, write,
-// usleep, gettimeofday
-//
-// pthread_create, pthread_detach, pthread_join
-// pthread_mutex_init, pthread_mutex_destroy
-// pthread_mutex_lock, pthread_mutex_unlock
 
 typedef struct s_fork
 {
@@ -73,10 +73,13 @@ int32_t		ft_atoi(const char *str);
 void		ft_putnbr(int64_t n);
 
 // utils_philo.c
+void		print_message(t_pdata *pdata, char *msg);
+int			check_died_time(t_pdata *pdata);
+void		died(t_pdata *pdata);
 
 // time.c
 int64_t		get_time_ms(void);
 int64_t		timestamp(int64_t start_time);
-void		sleep_ms(int64_t ms);
+void		sleep_ms(t_pdata *pdata, int64_t ms);
 
 #endif
