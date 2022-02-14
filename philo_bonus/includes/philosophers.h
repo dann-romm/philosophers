@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 17:40:30 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/02/14 17:42:08 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/02/14 19:39:15 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,12 @@
 # include <sys/time.h>
 # include <pthread.h>
 # include <stdint.h>
+
+// memset, printf, malloc, free, write
+// fork, kill, exit, waitpid
+// pthread_create, pthread_detach, pthread_join,
+// usleep, gettimeofday
+// sem_open, sem_close, sem_post, sem_wait, sem_unlink
 
 typedef struct s_fork
 {

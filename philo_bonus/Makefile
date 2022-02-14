@@ -3,7 +3,7 @@ RM			= rm -rf
 # CFLAGS		= -Wall -Wextra -Werror
 # CFLAGS		= -fsanitize=thread
 
-NAME		= philo
+NAME		= philo_bonus
 
 SRCDIR		= ./src/
 OBJDIR		= ./obj/
@@ -28,7 +28,6 @@ clean:
 
 fclean: clean
 	$(RM) $(NAME)
-	$(RM) $(BONUSNAME)
 
 re: fclean all
 
