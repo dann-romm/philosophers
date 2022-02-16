@@ -6,11 +6,11 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 17:43:24 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/02/14 17:43:25 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/02/16 19:35:25 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "philosophers_bonus.h"
 
 void	p_sleep(t_pdata *pdata)
 {
@@ -26,33 +26,16 @@ void	p_sleep(t_pdata *pdata)
 
 void	take_forks(t_pdata *pdata)
 {
-	if (pdata->left->num < pdata->right->num)
-	{
-		pthread_mutex_lock(&(pdata->left->mutex));
-		print_message(pdata, TAKING_FORK_MSG);
-		if (check_died_time(pdata))
-			return ;
-	}
-	pthread_mutex_lock(&(pdata->right->mutex));
+	sem_wait(pdata->sem_forks);
+	print_message(pdata, TAKING_FORK_MSG);
+	print_message(pdata, TAKING_FORK_MSG);
 	if (check_died_time(pdata))
 		return ;
-	print_message(pdata, TAKING_FORK_MSG);
-	if (pdata->left->num > pdata->right->num)
-	{
-		pthread_mutex_lock(&(pdata->left->mutex));
-		if (check_died_time(pdata))
-			return ;
-		print_message(pdata, TAKING_FORK_MSG);
-	}
 }
 
 void	put_forks(t_pdata *pdata)
 {
-	if (pdata->left->num > pdata->right->num)
-		pthread_mutex_unlock(&(pdata->left->mutex));
-	pthread_mutex_unlock(&(pdata->right->mutex));
-	if (pdata->left->num < pdata->right->num)
-		pthread_mutex_unlock(&(pdata->left->mutex));
+	sem_post(pdata->sem_forks);
 }
 
 void	p_eat(t_pdata *pdata)
@@ -64,11 +47,8 @@ void	p_eat(t_pdata *pdata)
 	put_forks(pdata);
 }
 
-void	*philosopher(void *thread_data)
+void	*philosopher(t_pdata *pdata)
 {
-	t_pdata	*pdata;
-
-	pdata = (t_pdata *)thread_data;
 	if (pdata->num % 2)
 		sleep_ms(pdata, pdata->sleep_ms / 2);
 	while (*(pdata->must_die) == 0)
@@ -76,5 +56,5 @@ void	*philosopher(void *thread_data)
 		p_eat(pdata);
 		p_sleep(pdata);
 	}
-	return (0);
+	exit(0);
 }

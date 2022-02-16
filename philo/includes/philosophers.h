@@ -6,13 +6,14 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 17:40:30 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/02/14 17:42:08 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/02/16 16:29:04 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
 
+# define DIED_MSG "died"
 # define EATING_MSG "is eating"
 # define SLEEPING_MSG "is sleeping"
 # define THINKING_MSG "is thinking"

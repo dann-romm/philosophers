@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 17:43:24 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/02/14 17:43:25 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/02/16 16:28:55 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	p_eat(t_pdata *pdata)
 {
 	take_forks(pdata);
 	print_message(pdata, EATING_MSG);
+	pdata->eat_count--;
 	pdata->last_eat = get_time_ms();
 	sleep_ms(pdata, pdata->eat_ms);
 	put_forks(pdata);
@@ -74,6 +75,8 @@ void	*philosopher(void *thread_data)
 	while (*(pdata->must_die) == 0)
 	{
 		p_eat(pdata);
+		if (!(pdata->eat_count))
+			return (0);
 		p_sleep(pdata);
 	}
 	return (0);

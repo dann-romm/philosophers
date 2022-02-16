@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 17:41:55 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/02/14 17:41:59 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/02/16 20:19:50 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	sleep_ms(t_pdata *pdata, int64_t ms)
 	{
 		if (time_current - pdata->last_eat > pdata->die_ms)
 			return (died(pdata));
-		usleep(80);
+		usleep(100);
 		time_current = get_time_ms();
 	}
 	if (time_current - pdata->last_eat > pdata->die_ms)

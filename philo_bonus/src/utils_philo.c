@@ -6,28 +6,27 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 17:41:50 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/02/14 18:00:52 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/02/16 20:04:29 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "philosophers_bonus.h"
 
 void	print_message(t_pdata *pdata, char *msg)
 {
-	pthread_mutex_lock(pdata->write_mutex);
+	sem_wait(pdata->sem_write);
 	if (!(*(pdata->must_die)))
 		printf("%lld %d %s\n",
 			timestamp(pdata->start_time), pdata->num + 1, msg);
-	pthread_mutex_unlock(pdata->write_mutex);
+	sem_post(pdata->sem_write);
 }
 
-int	check_died_time(t_pdata *pdata)
+int32_t	check_died_time(t_pdata *pdata)
 {
 	if (get_time_ms() - pdata->last_eat > pdata->die_ms)
 	{
 		died(pdata);
-		pthread_mutex_unlock(&(pdata->left->mutex));
-		pthread_mutex_unlock(&(pdata->right->mutex));
+		sem_post(pdata->sem_forks);
 		return (1);
 	}
 	return (0);
@@ -35,9 +34,9 @@ int	check_died_time(t_pdata *pdata)
 
 void	died(t_pdata *pdata)
 {
-	pthread_mutex_lock(pdata->write_mutex);
+	sem_wait(pdata->sem_write);
 	if (!(*(pdata->must_die)))
-		printf("%lld %d died\n", timestamp(pdata->start_time), pdata->num + 1);
+		printf("%lld %d %s\n", timestamp(pdata->start_time), pdata->num + 1, DIED_MSG);
 	*(pdata->must_die) = 1;
-	pthread_mutex_unlock(pdata->write_mutex);
+	sem_post(pdata->sem_write);
 }

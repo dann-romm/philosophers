@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 17:41:50 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/02/14 18:00:52 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/02/16 16:28:51 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	died(t_pdata *pdata)
 {
 	pthread_mutex_lock(pdata->write_mutex);
 	if (!(*(pdata->must_die)))
-		printf("%lld %d died\n", timestamp(pdata->start_time), pdata->num + 1);
+		printf("%lld %d %s\n", timestamp(pdata->start_time), pdata->num + 1, DIED_MSG);
 	*(pdata->must_die) = 1;
 	pthread_mutex_unlock(pdata->write_mutex);
 }

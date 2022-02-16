@@ -14,7 +14,7 @@ OBJ			= $(addprefix $(OBJDIR), $(SRC:.c=.o))
 
 all: $(NAME)
 
-$(OBJDIR)%.o : $(SRCDIR)%.c $(INCDIR)philosophers.h Makefile
+$(OBJDIR)%.o : $(SRCDIR)%.c $(INCDIR)philosophers_bonus.h Makefile
 	$(CC) $(CFLAGS) -c $< -o $@ -I$(INCDIR) -Ofast
 
 $(NAME): $(OBJDIR) $(OBJ)
