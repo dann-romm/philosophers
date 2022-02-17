@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 17:41:53 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/02/16 17:37:00 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/02/17 15:56:54 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int32_t	main(int32_t argc, char **argv)
 	else
 		init_pdata(mdata, argv, ft_atoi(argv[5]));
 	init_processes(mdata);
-	i = -1;
-	while (++i < mdata->num)
-		waitpid(-1, 0, 0); // отдельная функция с kill
+	waitpid(-1, 0, 0);
+	kill_all(mdata);
+	exit(0);
 }

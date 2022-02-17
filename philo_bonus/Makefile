@@ -36,4 +36,7 @@ bonus: $(NAME)
 test: $(NAME)
 	./$(NAME) 5 800 200 200
 
+test_die: $(NAME)
+	./$(NAME) 4 310 200 100
+
 .PHONY: all clean fclean re bonus

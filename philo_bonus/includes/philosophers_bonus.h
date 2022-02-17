@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 17:40:30 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/02/16 20:05:25 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/02/17 15:57:01 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 
 # define SEM_WRITE_NAME "philo_sem_write"
 # define SEM_FORKS_NAME "philo_sem_forks"
+# define SEM_CHECK_NAME "philo_sem_check"
 
 # include <stdlib.h>
 # include <stdio.h>
@@ -37,10 +38,13 @@
 // usleep, gettimeofday
 // sem_open, sem_close, sem_post, sem_wait, sem_unlink
 
+typedef struct s_mdata t_mdata;
+
 typedef struct s_pdata
 {
 	int32_t			num;
-	int32_t			*must_die;
+	t_mdata			*mdata;
+	pthread_t		check_die;
 
 	int64_t			die_ms;
 	int64_t			eat_ms;
@@ -52,6 +56,7 @@ typedef struct s_pdata
 	
 	sem_t			*sem_forks;
 	sem_t			*sem_write;
+	sem_t			*sem_check;
 }			t_pdata;
 
 typedef struct s_mdata
@@ -61,10 +66,9 @@ typedef struct s_mdata
 	pid_t			*pids;
 	t_pdata			**pdata;
 
-	pthread_t		check_die;
-
 	sem_t			*sem_forks;
 	sem_t			*sem_write;
+	sem_t			*sem_check;
 }				t_mdata;
 
 // philosopher.c
@@ -83,6 +87,8 @@ void		ft_putnbr(int64_t n);
 void		print_message(t_pdata *pdata, char *msg);
 int32_t		check_died_time(t_pdata *pdata);
 void		died(t_pdata *pdata);
+void		*death_checker(void *thread_data);
+void		kill_all(t_mdata *mdata);
 
 // time.c
 int64_t		get_time_ms(void);

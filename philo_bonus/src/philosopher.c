@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 17:43:24 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/02/16 19:35:25 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/02/17 13:23:48 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	p_sleep(t_pdata *pdata)
 {
-	if (!(*(pdata->must_die)))
+	if (!(pdata->mdata->must_die))
 	{
 		print_message(pdata, SLEEPING_MSG);
 		sleep_ms(pdata, pdata->sleep_ms);
@@ -49,9 +49,10 @@ void	p_eat(t_pdata *pdata)
 
 void	*philosopher(t_pdata *pdata)
 {
+	pthread_create(&(pdata->check_die), 0, death_checker, pdata);
 	if (pdata->num % 2)
 		sleep_ms(pdata, pdata->sleep_ms / 2);
-	while (*(pdata->must_die) == 0)
+	while (pdata->mdata->must_die == 0)
 	{
 		p_eat(pdata);
 		p_sleep(pdata);
