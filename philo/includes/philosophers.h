@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 17:40:30 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/04/23 18:28:37 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/04/23 23:43:17 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ typedef struct s_philo
 	int64_t		start_time;
 	int64_t		last_eat;
 
+	int32_t		*must_die;
+
 	t_mutex		*write_mutex;
 	t_mutex		check_die_mutex;
 }	t_philo;
@@ -65,6 +67,9 @@ typedef struct s_philo
 typedef struct s_data
 {
 	int32_t		num;
+
+	int32_t		must_die;
+
 	int32_t		eat_count;
 	int64_t		die_ms;
 	t_philo		*philos;

@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 18:47:26 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/04/23 19:00:02 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/04/24 00:14:36 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,15 @@ int	destroy_mutexes(t_data *data)
 {
 	int32_t	i;
 
-	if (pthread_mutex_destroy(&data->write_mutex))
-		return (1);
 	i = -1;
 	while (++i < data->num)
 	{
-		if (pthread_mutex_destroy(&data->forks[i].mutex))
+		pthread_mutex_destroy(&data->forks[i].mutex);
+		if (pthread_mutex_destroy(&data->philos[i].check_die_mutex))
 			return (1);
 	}
+	if (pthread_mutex_destroy(&data->write_mutex))
+		return (1);
 	return (0);
 }
 
@@ -59,15 +60,13 @@ int	run_philos_observer(t_data *data)
 				eat_stops = 0;
 			if (is_philo_died(data->philos + i, data->die_ms))
 			{
-				destroy_mutexes(data);
-				return (1);
+				data->must_die = 1;
+				sleep_ms(100);
+				return (destroy_mutexes(data) + 1);
 			}
 		}
 		if (eat_stops)
-		{
-			destroy_mutexes(data);
-			return (0);
-		}
+			return (destroy_mutexes(data));
 		usleep(500);
 	}
 }
@@ -102,7 +101,13 @@ int32_t	main(int32_t argc, char **argv)
 	if (check_args(argc, argv))
 		return (1);
 	if (init_data(&data, argc, argv))
+	{
+		if (data.forks)
+			free(data.forks);
+		if (data.philos)
+			free(data.philos);
 		return (1);
+	}
 	if (init_forks(&data) || init_philos(&data, argv, (pthread_t) 0))
 	{
 		free(data.forks);

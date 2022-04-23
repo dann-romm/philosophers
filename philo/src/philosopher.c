@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 18:47:57 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/04/23 19:05:54 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/04/24 00:04:17 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,19 @@ void	take_forks(t_philo *philo)
 {
 	if (philo->left->n <= philo->right->n)
 	{
+		if (*(philo->must_die))
+			return ;
 		pthread_mutex_lock(&philo->left->mutex);
 		print_message(philo, TAKING_FORK_MSG);
 	}
+	if (*(philo->must_die))
+		return ;
 	pthread_mutex_lock(&philo->right->mutex);
 	print_message(philo, TAKING_FORK_MSG);
 	if (philo->left->n >= philo->right->n)
 	{
+		if (*(philo->must_die))
+			return ;
 		pthread_mutex_lock(&philo->left->mutex);
 		print_message(philo, TAKING_FORK_MSG);
 	}
@@ -36,6 +42,8 @@ void	take_forks(t_philo *philo)
 
 void	put_forks(t_philo *philo)
 {
+	if (*(philo->must_die))
+		return ;
 	if (philo->left->n >= philo->right->n)
 		pthread_mutex_unlock(&philo->left->mutex);
 	pthread_mutex_unlock(&philo->right->mutex);
@@ -47,6 +55,8 @@ void	p_eat(t_philo *philo)
 {
 	take_forks(philo);
 	print_message(philo, EATING_MSG);
+	if (*(philo->must_die))
+		return ;
 	pthread_mutex_lock(&philo->check_die_mutex);
 	philo->last_eat = get_time_ms();
 	philo->eat_count++;
