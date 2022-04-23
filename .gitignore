@@ -1,5 +1,3 @@
 *.o
 *.DS_Store
-philo
-philo_bonus
 build

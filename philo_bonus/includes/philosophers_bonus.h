@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 17:40:30 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/04/23 21:26:44 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/04/24 00:45:39 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@
 # define THINKING_MSG "is thinking"
 # define TAKING_FORK_MSG "has taken a fork"
 
+# define SEM_EATING_NAME "philo_sem_eating_000"
 # define SEM_WRITE_NAME "philo_sem_write"
 # define SEM_FORKS_NAME "philo_sem_forks"
-# define SEM_CHECK_NAME "philo_sem_check"
 
 // memset
 # include <string.h>
@@ -46,7 +46,7 @@
 typedef struct s_philo
 {
 	int32_t		n;
-	sem_t		*forks;
+	sem_t		*eating_sem;
 	pid_t		pid;
 	int64_t		last_eat;
 	int32_t		eat_count;
@@ -55,16 +55,18 @@ typedef struct s_philo
 typedef struct s_data
 {
 	int32_t		num;
-	t_philo		*philo;
+	t_philo		*philos;
+
+	pthread_t	thread_id;
 
 	int64_t		eat_ms;
 	int64_t		sleep_ms;
 	int64_t		die_ms;
 	int32_t		eat_count;
-
 	int64_t		start_time;
 
-	sem_t		write_sem;
+	sem_t		*forks;
+	sem_t		*write_sem;
 }	t_data;
 
 // typedef struct 
@@ -108,7 +110,7 @@ int32_t		init_processes(t_data *data);
 
 // utils_ft.c
 int32_t		ft_atoi(const char *str);
-void		ft_putnbr(int64_t n);
+char		*ft_strcpy(char *dest, char *src);
 
 // utils_philo.c
 void		print_message(t_philo *philo, char *msg);
