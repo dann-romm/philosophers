@@ -1,20 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_ft.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/23 18:48:05 by doalbaco          #+#    #+#             */
+/*   Updated: 2022/04/23 18:48:06 by doalbaco         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <unistd.h>
 #include <stdint.h>
-
-void	ft_putnbr(int64_t n)
-{
-	char	c;
-
-	c = '0' + (n % 10);
-	if (n < 0)
-	{
-		write(1, "-", 1);
-		return (ft_putnbr(-n));
-	}
-	if (n > 9)
-		ft_putnbr(n / 10);
-	write(1, &c, 1);
-}
 
 int32_t	ft_atoi(const char *str)
 {

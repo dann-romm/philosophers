@@ -1,6 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_philo.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/23 18:48:16 by doalbaco          #+#    #+#             */
+/*   Updated: 2022/04/23 18:48:17 by doalbaco         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philosophers.h"
 
-// TODO: if it is DIE_MSG, don't unlock write mutex
 void	print_message(t_philo *philo, char *msg)
 {
 	pthread_mutex_lock(philo->write_mutex);

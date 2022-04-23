@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   time.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/23 18:47:59 by doalbaco          #+#    #+#             */
+/*   Updated: 2022/04/23 18:48:31 by doalbaco         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philosophers.h"
 
 int64_t	get_time_ms(void)
@@ -25,7 +37,7 @@ void	sleep_ms(int64_t ms)
 	time_current = time_start;
 	while (time_current - time_start < ms)
 	{
-		usleep(100); //   (1/10 ms)
+		usleep(100);
 		time_current = get_time_ms();
 	}
 }

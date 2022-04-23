@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/23 18:47:26 by doalbaco          #+#    #+#             */
+/*   Updated: 2022/04/23 18:47:53 by doalbaco         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philosophers.h"
 
 int	destroy_mutexes(t_data *data)
@@ -42,7 +54,8 @@ int	run_philos_observer(t_data *data)
 		eat_stops = 1;
 		while (++i < data->num)
 		{
-			if (data->eat_count == -1 || data->philos[i].eat_count < data->eat_count)
+			if (data->eat_count == -1
+				|| data->philos[i].eat_count < data->eat_count)
 				eat_stops = 0;
 			if (is_philo_died(data->philos + i, data->die_ms))
 			{
