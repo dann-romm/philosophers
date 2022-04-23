@@ -15,19 +15,20 @@ int	destroy_mutexes(t_data *data)
 	return (0);
 }
 
-int	is_philo_died(t_philo *philo) // print_message here
+int	is_philo_died(t_philo *philo, int64_t die_ms)
 {
-	// if (!philo->eat_count)
-	// 	return (1);
-	// else if (get_time_ms() - philo->last_eat > philo->die_ms)
-	
-	if (get_time_ms() - philo->last_eat > philo->die_ms)
+	pthread_mutex_lock(&philo->check_die_mutex);
+	if (get_time_ms() - philo->last_eat > die_ms)
 	{
+		pthread_mutex_unlock(&philo->check_die_mutex);
 		print_message(philo, DIED_MSG);
 		return (1);
 	}
 	else
+	{
+		pthread_mutex_unlock(&philo->check_die_mutex);
 		return (0);
+	}
 }
 
 int	run_philos_observer(t_data *data)
@@ -41,9 +42,9 @@ int	run_philos_observer(t_data *data)
 		eat_stops = 1;
 		while (++i < data->num)
 		{
-			if (data->philos[i].eat_count)
+			if (data->eat_count == -1 || data->philos[i].eat_count < data->eat_count)
 				eat_stops = 0;
-			if (is_philo_died(data->philos + i))
+			if (is_philo_died(data->philos + i, data->die_ms))
 			{
 				destroy_mutexes(data);
 				return (1);
@@ -58,11 +59,42 @@ int	run_philos_observer(t_data *data)
 	}
 }
 
+int	check_args(int argc, char **argv)
+{
+	int		i;
+	char	*str;
+
+	if (argc != 5 && argc != 6)
+		return (1);
+	i = 0;
+	while (++i < argc)
+	{
+		str = argv[i];
+		if (!*str)
+			return (1);
+		if (*str == '+')
+			str++;
+		while (*str >= '0' && *str <= '9')
+			str++;
+		if (*str)
+			return (1);
+	}
+	return (0);
+}
+
 int32_t	main(int32_t argc, char **argv)
 {
 	t_data	data;
-	
+
+	if (check_args(argc, argv))
+		return (1);
 	if (init_data(&data, argc, argv))
 		return (1);
+	if (init_forks(&data) || init_philos(&data, argv, (pthread_t) 0))
+	{
+		free(data.forks);
+		free(data.philos);
+		return (1);
+	}
 	return (run_philos_observer(&data));
 }

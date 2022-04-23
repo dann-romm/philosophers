@@ -1,12 +1,12 @@
 CC			= gcc
 RM			= rm -rf
-# CFLAGS		= -Wall -Wextra -Werror
+CFLAGS		= -Wall -Wextra -Werror -Ofast
 # CFLAGS		= -fsanitize=thread
 
 NAME		= philo
 
 SRCDIR		= ./src/
-OBJDIR		= ./obj/
+OBJDIR		= ./build/
 INCDIR		= ./includes/
 
 SRC			= main.c initialize.c philosopher.c utils_ft.c utils_philo.c time.c
@@ -15,7 +15,7 @@ OBJ			= $(addprefix $(OBJDIR), $(SRC:.c=.o))
 all: $(NAME)
 
 $(OBJDIR)%.o : $(SRCDIR)%.c $(INCDIR)philosophers.h Makefile
-	$(CC) $(CFLAGS) -c $< -o $@ -I$(INCDIR) -Ofast
+	$(CC) $(CFLAGS) -c $< -o $@ -I$(INCDIR)
 
 $(NAME): $(OBJDIR) $(OBJ)
 	$(CC) $(OBJ) -o $(NAME)

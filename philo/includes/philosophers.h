@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dannromm <dannromm@student.42.fr>          +#+  +:+       +#+        */
+/*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 17:40:30 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/04/23 12:27:17 by dannromm         ###   ########.fr       */
+/*   Updated: 2022/04/23 18:28:37 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ typedef struct s_philo
 	t_fork		*left;
 	t_fork		*right;
 
-	int64_t		die_ms;
 	int64_t		eat_ms;
 	int64_t		sleep_ms;
 	int64_t		eat_count;
@@ -60,12 +59,14 @@ typedef struct s_philo
 	int64_t		last_eat;
 
 	t_mutex		*write_mutex;
-	t_mutex		last_eat_mutex;
+	t_mutex		check_die_mutex;
 }	t_philo;
 
 typedef struct s_data
 {
 	int32_t		num;
+	int32_t		eat_count;
+	int64_t		die_ms;
 	t_philo		*philos;
 	t_fork		*forks;
 	t_mutex		write_mutex;
@@ -77,11 +78,10 @@ void		*philosopher(void *thread_data);
 // initialize.c
 int32_t		init_data(t_data *data, int32_t argc, char **argv);
 int32_t		init_forks(t_data *data);
-int32_t		init_philos(t_data *data, char **argv, int64_t eat_count);
+int32_t		init_philos(t_data *data, char **argv, pthread_t id);
 
 // utils_ft.c
 int32_t		ft_atoi(const char *str);
-void		ft_putnbr(int64_t n);
 
 // utils_philo.c
 void		print_message(t_philo *philo, char *msg);
@@ -91,6 +91,6 @@ void		print_message(t_philo *philo, char *msg);
 // time.c
 int64_t		get_time_ms(void);
 int64_t		timestamp(int64_t start_time);
-void		sleep_ms(t_philo *philo, int64_t ms);
+void		sleep_ms(int64_t ms);
 
 #endif

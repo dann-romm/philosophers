@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers_bonus.h                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dannromm <dannromm@student.42.fr>          +#+  +:+       +#+        */
+/*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 17:40:30 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/04/23 11:10:21 by dannromm         ###   ########.fr       */
+/*   Updated: 2022/04/23 18:29:06 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,6 @@ void		kill_all(t_data *data);
 // time.c
 int64_t		get_time_ms(void);
 int64_t		timestamp(int64_t start_time);
-void		sleep_ms(t_philo *philo, int64_t ms);
+void		sleep_ms(int64_t ms);
 
 #endif
