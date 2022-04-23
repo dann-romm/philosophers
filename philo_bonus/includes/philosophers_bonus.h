@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 17:40:30 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/04/23 18:29:06 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/04/23 21:26:44 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,53 +23,80 @@
 # define SEM_FORKS_NAME "philo_sem_forks"
 # define SEM_CHECK_NAME "philo_sem_check"
 
-# include <stdlib.h>
+// memset
+# include <string.h>
+// printf
 # include <stdio.h>
+// malloc free exit
+# include <stdlib.h>
+// write fork usleep
 # include <unistd.h>
-# include <sys/time.h>
-# include <pthread.h>
-# include <semaphore.h>
+// kill
 # include <signal.h>
+// waitpid
+# include <sys/wait.h>
+// pthread_create pthread_detach, pthread_join
+# include <pthread.h>
+// gettimeofday
+# include <sys/time.h>
+// sem_open sem_close sem_pos sem_wait sem_unlink
+# include <semaphore.h>
 # include <stdint.h>
 
-// memset, printf, malloc, free, write
-// fork, kill, exit, waitpid
-// pthread_create, pthread_detach, pthread_join,
-// usleep, gettimeofday
-// sem_open, sem_close, sem_post, sem_wait, sem_unlink
-
-typedef struct s_data t_data;
-
-typedef struct s_pdata
+typedef struct s_philo
 {
-	int32_t			num;
-	t_data			*data;
-	pthread_t		check_die;
-
-	int64_t			die_ms;
-	int64_t			eat_ms;
-	int64_t			sleep_ms;
-	int64_t			eat_count;
-
-	int64_t			start_time;
-	int64_t			last_eat;
-	
-	sem_t			*sem_forks;
-	sem_t			*sem_write;
-	sem_t			*sem_check;
-}			t_philo;
+	int32_t		n;
+	sem_t		*forks;
+	pid_t		pid;
+	int64_t		last_eat;
+	int32_t		eat_count;
+}	t_philo;
 
 typedef struct s_data
 {
-	int32_t			num;
-	int32_t			must_die;
-	pid_t			*pids;
-	t_philo			**philo;
+	int32_t		num;
+	t_philo		*philo;
 
-	sem_t			*sem_forks;
-	sem_t			*sem_write;
-	sem_t			*sem_check;
-}				t_data;
+	int64_t		eat_ms;
+	int64_t		sleep_ms;
+	int64_t		die_ms;
+	int32_t		eat_count;
+
+	int64_t		start_time;
+
+	sem_t		write_sem;
+}	t_data;
+
+// typedef struct 
+// {
+// 	int32_t			num;
+// 	t_data			*data;
+// 	pthread_t		check_die;
+
+// 	int64_t			die_ms;
+// 	int64_t			eat_ms;
+// 	int64_t			sleep_ms;
+// 	int64_t			eat_count;
+
+// 	int64_t			start_time;
+// 	int64_t			last_eat;
+	
+// 	sem_t			*sem_forks;
+// 	sem_t			*sem_write;
+// 	sem_t			*sem_check;
+// }			t_philo;
+
+// typedef struct s_data
+// {
+// 	int32_t			num;
+// 	int32_t			must_die;
+// 	pid_t			*pids;
+// 	t_philo			**philo;
+
+// 	sem_t			*sem_forks;
+// 	sem_t			*sem_write;
+// 	sem_t			*sem_check;
+// }				t_data;
 
 // philosopher.c
 void		*philosopher(t_philo *philo);
