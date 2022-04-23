@@ -21,7 +21,7 @@ int	is_philo_died(t_philo *philo, int64_t die_ms)
 	if (get_time_ms() - philo->last_eat > die_ms)
 	{
 		pthread_mutex_unlock(&philo->check_die_mutex);
-		print_message(philo, DIED_MSG);
+		print_message(philo, NULL);
 		return (1);
 	}
 	else
@@ -55,7 +55,6 @@ int	run_philos_observer(t_data *data)
 			destroy_mutexes(data);
 			return (0);
 		}
-		usleep(100);
 	}
 }
 

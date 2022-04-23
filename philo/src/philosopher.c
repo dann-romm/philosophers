@@ -31,14 +31,15 @@ void	put_forks(t_philo *philo)
 		pthread_mutex_unlock(&philo->left->mutex);
 }
 
-void	p_eat(t_philo *philo, int first_iter)
+void	p_eat(t_philo *philo)
 {
 	take_forks(philo);
 	print_message(philo, EATING_MSG);
+	philo->last_eat = get_time_ms();
 	sleep_ms(philo->eat_ms);
 	pthread_mutex_lock(&philo->check_die_mutex);
 	philo->eat_count++;
-	philo->last_eat = get_time_ms() + first_iter * philo->sleep_ms;
+	philo->last_eat = get_time_ms();
 	pthread_mutex_unlock(&philo->check_die_mutex);
 	put_forks(philo);
 }
@@ -50,12 +51,9 @@ void	*philosopher(void *thread_data)
 	philo = (t_philo *)thread_data;
 	if (philo->n % 2)
 		usleep((philo->eat_ms / 2) * 1000);
-	p_eat(philo, 0);
-	p_sleep(philo);
-	print_message(philo, THINKING_MSG);
 	while (1)
 	{
-		p_eat(philo, 1);
+		p_eat(philo);
 		p_sleep(philo);
 		print_message(philo, THINKING_MSG);
 	}
