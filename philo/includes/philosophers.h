@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: dannromm <dannromm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 17:40:30 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/02/16 16:29:04 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/04/23 12:27:17 by dannromm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,68 +19,78 @@
 # define THINKING_MSG "is thinking"
 # define TAKING_FORK_MSG "has taken a fork"
 
-# include <stdlib.h>
+// maximum number of philosophers (threads)
+# define PHILO_MAX 200
+
+// memset
+# include <string.h>
+// printf
 # include <stdio.h>
+// malloc free
+# include <stdlib.h>
+// write usleep
 # include <unistd.h>
+// gettimeofday
 # include <sys/time.h>
+// pthread_create pthread_detach, pthread_join pthread_mutex_init
+// pthread_mutex_destroy pthread_mutex_lock pthread_mutex_unlock
 # include <pthread.h>
 # include <stdint.h>
 
+typedef pthread_mutex_t	t_mutex;
+
 typedef struct s_fork
 {
-	pthread_mutex_t	mutex;
-	int32_t			num;
-}					t_fork;
+	t_mutex	mutex;
+	int32_t	n;
+}	t_fork;
 
-typedef struct s_pdata
+typedef struct s_philo
 {
-	int32_t			num;
-	t_fork			*left;
-	t_fork			*right;
-	int32_t			*must_die;
+	int32_t		n;
+	t_fork		*left;
+	t_fork		*right;
 
-	int64_t			die_ms;
-	int64_t			eat_ms;
-	int64_t			sleep_ms;
-	int64_t			eat_count;
+	int64_t		die_ms;
+	int64_t		eat_ms;
+	int64_t		sleep_ms;
+	int64_t		eat_count;
 
-	int64_t			start_time;
-	int64_t			last_eat;
+	int64_t		start_time;
+	int64_t		last_eat;
 
-	pthread_mutex_t	*write_mutex;
-}			t_pdata;
+	t_mutex		*write_mutex;
+	t_mutex		last_eat_mutex;
+}	t_philo;
 
-typedef struct s_mdata
+typedef struct s_data
 {
-	int32_t			num;
-	pthread_t		*threads;
-	t_pdata			**pdata;
-	t_fork			**forks;
-	int32_t			must_die;
-	pthread_mutex_t	write_mutex;
-}				t_mdata;
+	int32_t		num;
+	t_philo		*philos;
+	t_fork		*forks;
+	t_mutex		write_mutex;
+}	t_data;
 
 // philosopher.c
 void		*philosopher(void *thread_data);
 
 // initialize.c
-int32_t		init_mdata(t_mdata *mdata, int32_t argc, char **argv);
-int32_t		init_forks(t_mdata *mdata);
-int32_t		init_pdata(t_mdata *mdata, char **argv, int64_t	eat_count);
-int32_t		init_threads(t_mdata *mdata);
+int32_t		init_data(t_data *data, int32_t argc, char **argv);
+int32_t		init_forks(t_data *data);
+int32_t		init_philos(t_data *data, char **argv, int64_t eat_count);
 
 // utils_ft.c
 int32_t		ft_atoi(const char *str);
 void		ft_putnbr(int64_t n);
 
 // utils_philo.c
-void		print_message(t_pdata *pdata, char *msg);
-int			check_died_time(t_pdata *pdata);
-void		died(t_pdata *pdata);
+void		print_message(t_philo *philo, char *msg);
+// int			check_died_time(t_philo *philo);
+// void		died(t_philo *philo);
 
 // time.c
 int64_t		get_time_ms(void);
 int64_t		timestamp(int64_t start_time);
-void		sleep_ms(t_pdata *pdata, int64_t ms);
+void		sleep_ms(t_philo *philo, int64_t ms);
 
 #endif

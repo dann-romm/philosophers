@@ -3,52 +3,52 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: dannromm <dannromm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 17:41:53 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/02/17 15:56:54 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/04/23 11:10:21 by dannromm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers_bonus.h"
 
-int32_t	free_data(t_mdata *mdata, int32_t exit_code)
+int32_t	free_data(t_data *data, int32_t exit_code)
 {
 	int32_t	i;
 
-	if (mdata)
+	if (data)
 	{
-		if (mdata->pids)
-			free(mdata->pids);
-		if (mdata->pdata)
+		if (data->pids)
+			free(data->pids);
+		if (data->philo)
 		{
 			i = 0;
-			while (i < mdata->num && mdata->pdata[i])
-				free(mdata->pdata[i++]);
-			free(mdata->pdata);
+			while (i < data->num && data->philo[i])
+				free(data->philo[i++]);
+			free(data->philo);
 		}
-		if (mdata->pids)
-			free(mdata->pids);
-		free(mdata);
+		if (data->pids)
+			free(data->pids);
+		free(data);
 	}
 	return (exit_code);
 }
 
 int32_t	main(int32_t argc, char **argv)
 {
-	t_mdata	*mdata;
+	t_data	*data;
 	int32_t	i;
 
-	mdata = (t_mdata *)malloc(sizeof(t_mdata));
-	if (!mdata)
+	data = (t_data *)malloc(sizeof(t_data));
+	if (!data)
 		return (1);
-	init_mdata(mdata, argc, argv);
+	init_data(data, argc, argv);
 	if (argc < 6)
-		init_pdata(mdata, argv, -1);
+		init_philos(data, argv, -1);
 	else
-		init_pdata(mdata, argv, ft_atoi(argv[5]));
-	init_processes(mdata);
+		init_philos(data, argv, ft_atoi(argv[5]));
+	init_processes(data);
 	waitpid(-1, 0, 0);
-	kill_all(mdata);
+	kill_all(data);
 	exit(0);
 }

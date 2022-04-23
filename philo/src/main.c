@@ -1,60 +1,68 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/14 17:41:53 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/02/14 17:43:19 by doalbaco         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "philosophers.h"
 
-int32_t	free_data(t_mdata *mdata, int32_t exit_code)
+int	destroy_mutexes(t_data *data)
 {
 	int32_t	i;
 
-	if (mdata)
+	if (pthread_mutex_destroy(&data->write_mutex))
+		return (1);
+	i = -1;
+	while (++i < data->num)
 	{
-		if (mdata->threads)
-			free(mdata->threads);
-		if (mdata->pdata)
-		{
-			i = 0;
-			while (i < mdata->num && mdata->pdata[i])
-				free(mdata->pdata[i++]);
-			free(mdata->pdata);
-		}
-		if (mdata->forks)
-		{
-			i = 0;
-			while (i < mdata->num && mdata->forks[i])
-				free(mdata->forks[i++]);
-			free(mdata->forks);
-		}
-		free(mdata);
+		if (pthread_mutex_destroy(&data->forks[i].mutex))
+			return (1);
 	}
-	return (exit_code);
+	return (0);
+}
+
+int	is_philo_died(t_philo *philo) // print_message here
+{
+	// if (!philo->eat_count)
+	// 	return (1);
+	// else if (get_time_ms() - philo->last_eat > philo->die_ms)
+	
+	if (get_time_ms() - philo->last_eat > philo->die_ms)
+	{
+		print_message(philo, DIED_MSG);
+		return (1);
+	}
+	else
+		return (0);
+}
+
+int	run_philos_observer(t_data *data)
+{
+	int32_t	i;
+	int32_t	eat_stops;
+
+	while (1)
+	{
+		i = -1;
+		eat_stops = 1;
+		while (++i < data->num)
+		{
+			if (data->philos[i].eat_count)
+				eat_stops = 0;
+			if (is_philo_died(data->philos + i))
+			{
+				destroy_mutexes(data);
+				return (1);
+			}
+		}
+		if (eat_stops)
+		{
+			destroy_mutexes(data);
+			return (0);
+		}
+		usleep(100);
+	}
 }
 
 int32_t	main(int32_t argc, char **argv)
 {
-	t_mdata	*mdata;
-	int32_t	i;
-
-	mdata = (t_mdata *)malloc(sizeof(t_mdata));
-	if (!mdata)
+	t_data	data;
+	
+	if (init_data(&data, argc, argv))
 		return (1);
-	init_mdata(mdata, argc, argv);
-	init_forks(mdata);
-	if (argc < 6)
-		init_pdata(mdata, argv, -1);
-	else
-		init_pdata(mdata, argv, ft_atoi(argv[5]));
-	init_threads(mdata);
-	i = -1;
-	while (++i < mdata->num)
-		pthread_join(mdata->threads[i], 0);
+	return (run_philos_observer(&data));
 }

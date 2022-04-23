@@ -3,59 +3,59 @@
 /*                                                        :::      ::::::::   */
 /*   philosopher.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: dannromm <dannromm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 17:43:24 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/02/17 13:23:48 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/04/23 11:10:21 by dannromm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers_bonus.h"
 
-void	p_sleep(t_pdata *pdata)
+void	p_sleep(t_philo *philo)
 {
-	if (!(pdata->mdata->must_die))
+	if (!(philo->data->must_die))
 	{
-		print_message(pdata, SLEEPING_MSG);
-		sleep_ms(pdata, pdata->sleep_ms);
-		if (check_died_time(pdata))
+		print_message(philo, SLEEPING_MSG);
+		sleep_ms(philo, philo->sleep_ms);
+		if (check_died_time(philo))
 			return ;
-		print_message(pdata, THINKING_MSG);
+		print_message(philo, THINKING_MSG);
 	}
 }
 
-void	take_forks(t_pdata *pdata)
+void	take_forks(t_philo *philo)
 {
-	sem_wait(pdata->sem_forks);
-	print_message(pdata, TAKING_FORK_MSG);
-	print_message(pdata, TAKING_FORK_MSG);
-	if (check_died_time(pdata))
+	sem_wait(philo->sem_forks);
+	print_message(philo, TAKING_FORK_MSG);
+	print_message(philo, TAKING_FORK_MSG);
+	if (check_died_time(philo))
 		return ;
 }
 
-void	put_forks(t_pdata *pdata)
+void	put_forks(t_philo *philo)
 {
-	sem_post(pdata->sem_forks);
+	sem_post(philo->sem_forks);
 }
 
-void	p_eat(t_pdata *pdata)
+void	p_eat(t_philo *philo)
 {
-	take_forks(pdata);
-	print_message(pdata, EATING_MSG);
-	pdata->last_eat = get_time_ms();
-	sleep_ms(pdata, pdata->eat_ms);
-	put_forks(pdata);
+	take_forks(philo);
+	print_message(philo, EATING_MSG);
+	philo->last_eat = get_time_ms();
+	sleep_ms(philo, philo->eat_ms);
+	put_forks(philo);
 }
 
-void	*philosopher(t_pdata *pdata)
+void	*philosopher(t_philo *philo)
 {
-	pthread_create(&(pdata->check_die), 0, death_checker, pdata);
-	if (pdata->num % 2)
-		sleep_ms(pdata, pdata->sleep_ms / 2);
-	while (pdata->mdata->must_die == 0)
+	pthread_create(&(philo->check_die), 0, death_checker, philo);
+	if (philo->num % 2)
+		sleep_ms(philo, philo->sleep_ms / 2);
+	while (philo->data->must_die == 0)
 	{
-		p_eat(pdata);
-		p_sleep(pdata);
+		p_eat(philo);
+		p_sleep(philo);
 	}
 	exit(0);
 }

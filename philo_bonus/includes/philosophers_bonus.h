@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers_bonus.h                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: dannromm <dannromm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 17:40:30 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/02/17 15:57:01 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/04/23 11:10:21 by dannromm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,12 @@
 // usleep, gettimeofday
 // sem_open, sem_close, sem_post, sem_wait, sem_unlink
 
-typedef struct s_mdata t_mdata;
+typedef struct s_data t_data;
 
 typedef struct s_pdata
 {
 	int32_t			num;
-	t_mdata			*mdata;
+	t_data			*data;
 	pthread_t		check_die;
 
 	int64_t			die_ms;
@@ -57,42 +57,42 @@ typedef struct s_pdata
 	sem_t			*sem_forks;
 	sem_t			*sem_write;
 	sem_t			*sem_check;
-}			t_pdata;
+}			t_philo;
 
-typedef struct s_mdata
+typedef struct s_data
 {
 	int32_t			num;
 	int32_t			must_die;
 	pid_t			*pids;
-	t_pdata			**pdata;
+	t_philo			**philo;
 
 	sem_t			*sem_forks;
 	sem_t			*sem_write;
 	sem_t			*sem_check;
-}				t_mdata;
+}				t_data;
 
 // philosopher.c
-void		*philosopher(t_pdata *pdata);
+void		*philosopher(t_philo *philo);
 
 // initialize.c
-int32_t		init_mdata(t_mdata *mdata, int32_t argc, char **argv);
-int32_t		init_pdata(t_mdata *mdata, char **argv, int64_t	eat_count);
-int32_t		init_processes(t_mdata *mdata);
+int32_t		init_data(t_data *data, int32_t argc, char **argv);
+int32_t		init_philos(t_data *data, char **argv, int64_t	eat_count);
+int32_t		init_processes(t_data *data);
 
 // utils_ft.c
 int32_t		ft_atoi(const char *str);
 void		ft_putnbr(int64_t n);
 
 // utils_philo.c
-void		print_message(t_pdata *pdata, char *msg);
-int32_t		check_died_time(t_pdata *pdata);
-void		died(t_pdata *pdata);
+void		print_message(t_philo *philo, char *msg);
+int32_t		check_died_time(t_philo *philo);
+void		died(t_philo *philo);
 void		*death_checker(void *thread_data);
-void		kill_all(t_mdata *mdata);
+void		kill_all(t_data *data);
 
 // time.c
 int64_t		get_time_ms(void);
 int64_t		timestamp(int64_t start_time);
-void		sleep_ms(t_pdata *pdata, int64_t ms);
+void		sleep_ms(t_philo *philo, int64_t ms);
 
 #endif

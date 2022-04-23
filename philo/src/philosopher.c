@@ -1,83 +1,59 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   philosopher.c                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/14 17:43:24 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/02/16 16:28:55 by doalbaco         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "philosophers.h"
 
-void	p_sleep(t_pdata *pdata)
+void	p_sleep(t_philo *philo)
 {
-	if (!(*(pdata->must_die)))
+	print_message(philo, SLEEPING_MSG);
+	sleep_ms(philo, philo->sleep_ms);
+}
+
+void	take_forks(t_philo *philo)
+{
+	if (philo->left->n < philo->right->n)
 	{
-		print_message(pdata, SLEEPING_MSG);
-		sleep_ms(pdata, pdata->sleep_ms);
-		if (check_died_time(pdata))
-			return ;
-		print_message(pdata, THINKING_MSG);
+		pthread_mutex_lock(&(philo->left->mutex));
+		print_message(philo, TAKING_FORK_MSG);
+	}
+	pthread_mutex_lock(&(philo->right->mutex));
+	print_message(philo, TAKING_FORK_MSG);
+	if (philo->left->n > philo->right->n)
+	{
+		pthread_mutex_lock(&(philo->left->mutex));
+		print_message(philo, TAKING_FORK_MSG);
 	}
 }
 
-void	take_forks(t_pdata *pdata)
+void	put_forks(t_philo *philo)
 {
-	if (pdata->left->num < pdata->right->num)
-	{
-		pthread_mutex_lock(&(pdata->left->mutex));
-		print_message(pdata, TAKING_FORK_MSG);
-		if (check_died_time(pdata))
-			return ;
-	}
-	pthread_mutex_lock(&(pdata->right->mutex));
-	if (check_died_time(pdata))
-		return ;
-	print_message(pdata, TAKING_FORK_MSG);
-	if (pdata->left->num > pdata->right->num)
-	{
-		pthread_mutex_lock(&(pdata->left->mutex));
-		if (check_died_time(pdata))
-			return ;
-		print_message(pdata, TAKING_FORK_MSG);
-	}
+	if (philo->left->n > philo->right->n)
+		pthread_mutex_unlock(&(philo->left->mutex));
+	pthread_mutex_unlock(&(philo->right->mutex));
+	if (philo->left->n < philo->right->n)
+		pthread_mutex_unlock(&(philo->left->mutex));
 }
 
-void	put_forks(t_pdata *pdata)
+void	p_eat(t_philo *philo)
 {
-	if (pdata->left->num > pdata->right->num)
-		pthread_mutex_unlock(&(pdata->left->mutex));
-	pthread_mutex_unlock(&(pdata->right->mutex));
-	if (pdata->left->num < pdata->right->num)
-		pthread_mutex_unlock(&(pdata->left->mutex));
-}
-
-void	p_eat(t_pdata *pdata)
-{
-	take_forks(pdata);
-	print_message(pdata, EATING_MSG);
-	pdata->eat_count--;
-	pdata->last_eat = get_time_ms();
-	sleep_ms(pdata, pdata->eat_ms);
-	put_forks(pdata);
+	take_forks(philo);
+	print_message(philo, EATING_MSG);
+	philo->eat_count--;
+	philo->last_eat = get_time_ms();
+	sleep_ms(philo, philo->eat_ms);
+	philo->last_eat = get_time_ms();
+	put_forks(philo);
 }
 
 void	*philosopher(void *thread_data)
 {
-	t_pdata	*pdata;
+	t_philo	*philo;
 
-	pdata = (t_pdata *)thread_data;
-	if (pdata->num % 2)
-		sleep_ms(pdata, pdata->sleep_ms / 2);
-	while (*(pdata->must_die) == 0)
+	philo = (t_philo *)thread_data;
+	if (philo->n % 2)
+		usleep((philo->eat_ms / 2) * 1000);
+	while (1)
 	{
-		p_eat(pdata);
-		if (!(pdata->eat_count))
-			return (0);
-		p_sleep(pdata);
+		p_eat(philo);
+		p_sleep(philo);
+		print_message(philo, THINKING_MSG);
 	}
 	return (0);
 }
