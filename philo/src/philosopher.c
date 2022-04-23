@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 18:47:57 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/04/23 18:47:58 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/04/23 19:05:54 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,11 @@ void	p_eat(t_philo *philo)
 {
 	take_forks(philo);
 	print_message(philo, EATING_MSG);
-	philo->last_eat = get_time_ms();
-	sleep_ms(philo->eat_ms);
 	pthread_mutex_lock(&philo->check_die_mutex);
-	philo->eat_count++;
 	philo->last_eat = get_time_ms();
+	philo->eat_count++;
 	pthread_mutex_unlock(&philo->check_die_mutex);
+	sleep_ms(philo->eat_ms);
 	put_forks(philo);
 }
 
