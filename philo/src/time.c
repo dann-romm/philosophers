@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 18:47:59 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/04/23 18:48:31 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/04/23 18:50:31 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,9 @@ int64_t	timestamp(int64_t start_time)
 
 void	sleep_ms(int64_t ms)
 {
-	int64_t	time_start;
+	const int64_t	time_start = get_time_ms();
 	int64_t	time_current;
 
-	time_start = get_time_ms();
 	time_current = time_start;
 	while (time_current - time_start < ms)
 	{
