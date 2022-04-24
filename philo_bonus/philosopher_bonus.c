@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philosopher.c                                      :+:      :+:    :+:   */
+/*   philosopher_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 18:47:57 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/04/24 17:51:19 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/04/24 18:26:39 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	*philosopher_observer(void *thread_data)
 {
-	int64_t	current_time;
 	t_data	*data;
 
 	data = (t_data *) thread_data;
