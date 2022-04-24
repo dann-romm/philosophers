@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 18:47:26 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/04/24 00:14:36 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/04/24 17:26:53 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	run_philos_observer(t_data *data)
 		}
 		if (eat_stops)
 			return (destroy_mutexes(data));
-		usleep(500);
+		usleep(250);
 	}
 }
 

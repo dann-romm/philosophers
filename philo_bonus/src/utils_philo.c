@@ -6,22 +6,45 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 18:48:16 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/04/24 00:29:03 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/04/24 18:13:10 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers_bonus.h"
 
-void	print_message(t_philo *philo, char *msg)
+int	check_args(int argc, char **argv)
 {
-	pthread_mutex_lock(philo->write_mutex);
+	int		i;
+	char	*str;
+
+	if (argc != 5 && argc != 6)
+		return (1);
+	i = 0;
+	while (++i < argc)
+	{
+		str = argv[i];
+		if (!*str)
+			return (1);
+		if (*str == '+')
+			str++;
+		while (*str >= '0' && *str <= '9')
+			str++;
+		if (*str)
+			return (1);
+	}
+	return (0);
+}
+
+void	print_message(t_data *data, char *msg, int n)
+{
+	sem_wait(data->write_sem);
 	if (msg)
 	{
 		printf("%lld %d %s\n",
-			timestamp(philo->start_time), philo->n + 1, msg);
-		pthread_mutex_unlock(philo->write_mutex);
+			timestamp(data->start_time), n + 1, msg);
+		sem_post(data->write_sem);
 	}
 	else
 		printf("%lld %d %s\n",
-			timestamp(philo->start_time), philo->n + 1, DIED_MSG);
+			timestamp(data->start_time), n + 1, DIED_MSG);
 }

@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 18:47:59 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/04/24 00:29:03 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/04/24 18:14:31 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	sleep_ms(int64_t ms)
 	time_current = time_start;
 	while (time_current - time_start < ms)
 	{
-		usleep(100);
+		usleep(500);
 		time_current = get_time_ms();
 	}
 }

@@ -6,12 +6,12 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 17:40:30 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/04/24 00:45:39 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/04/24 18:15:30 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILOSOPHERS_H
-# define PHILOSOPHERS_H
+#ifndef PHILOSOPHERS_BONUS_H
+# define PHILOSOPHERS_BONUS_H
 
 # define DIED_MSG "died"
 # define EATING_MSG "is eating"
@@ -45,11 +45,11 @@
 
 typedef struct s_philo
 {
-	int32_t		n;
 	sem_t		*eating_sem;
 	pid_t		pid;
 	int64_t		last_eat;
 	int32_t		eat_count;
+	int32_t		is_dead;
 }	t_philo;
 
 typedef struct s_data
@@ -59,9 +59,9 @@ typedef struct s_data
 
 	pthread_t	thread_id;
 
+	int64_t		die_ms;
 	int64_t		eat_ms;
 	int64_t		sleep_ms;
-	int64_t		die_ms;
 	int32_t		eat_count;
 	int64_t		start_time;
 
@@ -69,55 +69,19 @@ typedef struct s_data
 	sem_t		*write_sem;
 }	t_data;
 
-// typedef struct 
-// {
-// 	int32_t			num;
-// 	t_data			*data;
-// 	pthread_t		check_die;
-
-// 	int64_t			die_ms;
-// 	int64_t			eat_ms;
-// 	int64_t			sleep_ms;
-// 	int64_t			eat_count;
-
-// 	int64_t			start_time;
-// 	int64_t			last_eat;
-	
-// 	sem_t			*sem_forks;
-// 	sem_t			*sem_write;
-// 	sem_t			*sem_check;
-// }			t_philo;
-
-// typedef struct s_data
-// {
-// 	int32_t			num;
-// 	int32_t			must_die;
-// 	pid_t			*pids;
-// 	t_philo			**philo;
-
-// 	sem_t			*sem_forks;
-// 	sem_t			*sem_write;
-// 	sem_t			*sem_check;
-// }				t_data;
-
 // philosopher.c
-void		*philosopher(t_philo *philo);
+int			philosopher(t_data *data, int n);
 
 // initialize.c
 int32_t		init_data(t_data *data, int32_t argc, char **argv);
-int32_t		init_philos(t_data *data, char **argv, int64_t	eat_count);
-int32_t		init_processes(t_data *data);
 
 // utils_ft.c
 int32_t		ft_atoi(const char *str);
 char		*ft_strcpy(char *dest, char *src);
 
 // utils_philo.c
-void		print_message(t_philo *philo, char *msg);
-int32_t		check_died_time(t_philo *philo);
-void		died(t_philo *philo);
-void		*death_checker(void *thread_data);
-void		kill_all(t_data *data);
+void		print_message(t_data *data, char *msg, int n);
+int			check_args(int argc, char **argv);
 
 // time.c
 int64_t		get_time_ms(void);

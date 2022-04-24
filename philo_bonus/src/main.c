@@ -6,75 +6,74 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 18:47:26 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/04/24 01:00:26 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/04/24 18:13:42 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers_bonus.h"
 
-int	philosopher(t_data *data, int n)
+static void	kill_philos(t_data *data)
 {
-	return (0);
+	pid_t	died_philo;
+	int32_t	eating_done_count;
+	int32_t	status;
+	int32_t	i;
+
+	status = 0;
+	eating_done_count = 0;
+	while (eating_done_count < data->num && !WEXITSTATUS(status))
+	{
+		eating_done_count++;
+		died_philo = waitpid(-1, &status, 0);
+		i = -1;
+		while (++i < data->num)
+		{
+			if (data->philos[i].pid == died_philo)
+				data->philos[i].is_dead = 1;
+		}
+	}
+	i = -1;
+	while (++i < data->num)
+	{
+		if (!data->philos[i].is_dead)
+			kill(data->philos[i].pid, SIGKILL);
+	}
 }
 
-int	run_observer(t_data *data)
-{
-	return (0);
-}
-
-int	kill_philos()
-{
-	return (0);
-}
-
-int	close_all_sems()
-{
-	return (0);
-}
-
-int	run_philos(t_data *data)
+static void	close_all_sems(t_data *data)
 {
 	int32_t	i;
-	pid_t	obsever;
+	char	sem_name[21];
+
+	ft_strcpy(sem_name, SEM_EATING_NAME);
+	i = -1;
+	while (++i < data->num)
+	{
+		sem_name[17] = i / 100 + '0';
+		sem_name[18] = i / 10 % 10 + '0';
+		sem_name[19] = i % 10 + '0';
+		sem_close(data->philos[i].eating_sem);
+		sem_unlink(sem_name);
+	}
+	sem_close(data->forks);
+	sem_close(data->write_sem);
+	sem_unlink(SEM_FORKS_NAME);
+	sem_unlink(SEM_WRITE_NAME);
+}
+
+static int	run_philos(t_data *data)
+{
+	int32_t	i;
 
 	i = -1;
 	while (++i < data->num)
 	{
 		data->philos[i].pid = fork();
 		if (data->philos[i].pid == 0)
-			exit(philosopher(data, i));
+			philosopher(data, i);
 	}
-	obsever = 0;
-	if (data->eat_count == -1)
-	{
-		obsever = fork();
-		if (obsever == 0)
-			exit(run_observer(data));
-	}
-	kill_philos();
-	close_all_sems();
-}
-
-int	check_args(int argc, char **argv)
-{
-	int		i;
-	char	*str;
-
-	if (argc != 5 && argc != 6)
-		return (1);
-	i = 0;
-	while (++i < argc)
-	{
-		str = argv[i];
-		if (!*str)
-			return (1);
-		if (*str == '+')
-			str++;
-		while (*str >= '0' && *str <= '9')
-			str++;
-		if (*str)
-			return (1);
-	}
+	kill_philos(data);
+	close_all_sems(data);
 	return (0);
 }
 
