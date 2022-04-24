@@ -6,7 +6,7 @@
 /*   By: doalbaco <doalbaco@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 18:47:10 by doalbaco          #+#    #+#             */
-/*   Updated: 2022/04/24 18:30:02 by doalbaco         ###   ########.fr       */
+/*   Updated: 2022/04/24 19:36:17 by doalbaco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ static int32_t	init_sems(t_data *data)
 
 int32_t	init_data(t_data *data, int32_t argc, char **argv)
 {
+	data->philos = NULL;
 	data->num = ft_atoi(argv[1]);
 	data->die_ms = (int64_t) ft_atoi(argv[2]);
 	data->eat_ms = (int64_t) ft_atoi(argv[3]);
